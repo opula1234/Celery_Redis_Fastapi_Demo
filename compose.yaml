@@ -1,11 +1,11 @@
 services:
   redis:
     image: redis:7-alpine
-    command: ["redis-server", "--appendonly", "yes"]
+    command: [ "redis-server", "--appendonly", "yes" ]
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: [ "CMD", "redis-cli", "ping" ]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -13,7 +13,7 @@ services:
 
   api:
     build: .
-    command: ["uvicorn", "celery_demo.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    command: [ "uvicorn", "celery_demo.main:app", "--host", "0.0.0.0", "--port", "8000" ]
     environment:
       CELERY_BROKER_URL: redis://redis:6379/0
       CELERY_RESULT_BACKEND: redis://redis:6379/0
@@ -26,7 +26,7 @@ services:
 
   worker:
     build: .
-    command: ["celery", "-A", "celery_demo.tasks:celery_app", "worker", "--loglevel=info", "--concurrency=2"]
+    command: [ "celery", "-A", "celery_demo.tasks:celery_app", "worker", "--loglevel=info", "--concurrency=2" ]
     environment:
       CELERY_BROKER_URL: redis://redis:6379/0
       CELERY_RESULT_BACKEND: redis://redis:6379/0
@@ -37,7 +37,7 @@ services:
 
   flower:
     build: .
-    command: ["celery", "--broker=redis://redis:6379/0", "flower", "--port=5555"]
+    command: [ "celery", "--broker=redis://redis:6379/0", "flower", "--port=5555" ]
     ports:
       - "127.0.0.1:5555:5555"
     depends_on:
