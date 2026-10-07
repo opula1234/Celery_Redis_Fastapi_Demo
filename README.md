@@ -39,6 +39,28 @@ docker compose down
 Redis data is kept in the `redis_data` volume when the containers are stopped.
 To remove the containers and persisted Redis data, run `docker compose down -v`.
 
+## Logging
+
+The API and Celery worker use Python's standard logging system. Logs are written
+both to the terminal and to a daily log file in a date-based folder within the
+project root:
+
+`logs/YYYY-MM-DD/app.log`
+
+This creates a new folder each day and appends new log entries to that day's
+file. Set `LOG_LEVEL` to control verbosity (for example `DEBUG`, `INFO`,
+`WARNING`, or `ERROR`).
+
+```powershell
+$env:LOG_LEVEL = "DEBUG"
+```
+
+To view the current day's logs:
+
+```powershell
+Get-Content .\logs\(Get-Date -Format yyyy-MM-dd)\app.log
+```
+
 ## Run locally
 
 When running the API or worker outside Docker, Redis must be available at
